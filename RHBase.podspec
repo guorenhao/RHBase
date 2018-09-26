@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
 
   s.name         = 'RHBase'
-  s.version      = '1.0.0'
+  s.version      = '1.0.2'
   s.summary      = 'iOS常用基类'
   s.homepage     = 'https://github.com/guorenhao/RHBase'
   s.license      = 'MIT'

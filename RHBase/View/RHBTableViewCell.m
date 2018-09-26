@@ -6,7 +6,7 @@
 //
 
 #import "RHBTableViewCell.h"
-#import <Masonry.h>
+#import "Masonry.h"
 
 @interface RHBTableViewCell ()
 
