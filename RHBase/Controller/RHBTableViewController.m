@@ -164,11 +164,6 @@
     [self tableView:tableView didSelectRowAtIndexPath:indexPath model:model];
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationEndEditing object:nil userInfo:nil];
-}
-
 #pragma mark - setter and getter
 
 - (UITableView *)tableView {
