@@ -6,6 +6,8 @@
 //
 
 #import "RHBCollectionViewController.h"
+#import <Masonry.h>
+#import <MJRefresh/MJRefresh.h>
 #import "RHBCollectionViewCell.h"
 
 @interface RHBCollectionViewController ()

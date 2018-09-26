@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
   s.source_files = 'RHBase/**/*.{h,m}'
   s.frameworks   = 'UIKit', 'Foundation'
   s.requires_arc = true
-  s.dependency "Masonry"
-  s.dependency "MJRefresh"
+  s.dependency "Masonry", "~> 1.1.0"
+  s.dependency "MJRefresh", "~> 3.1.15.3"
 
 end
