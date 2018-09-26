@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
 
   s.name         = 'RHBase'
-  s.version      = '1.0'
+  s.version      = '1.0.0'
   s.summary      = 'iOS常用基类'
   s.homepage     = 'https://github.com/guorenhao/RHBase'
   s.license      = 'MIT'
@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
   s.source_files = 'RHBase/**/*.{h,m}'
   s.frameworks   = 'UIKit', 'Foundation'
   s.requires_arc = true
-  s.dependency "Masonry", "~> 1.1.0"
-  s.dependency "MJRefresh", "~> 3.1.15.3"
+  s.dependency 'Masonry', '~> 1.1.0'
+  s.dependency 'MJRefresh', '~> 3.1.15.3'
 
 end

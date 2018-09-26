@@ -104,10 +104,10 @@
 
 - (void)addMj_header {
     
-    RHWeakSelf;
+    __weak typeof(self) weakSelf = self;
     MJRefreshNormalHeader * header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
         
-        RHStrongSelf;
+        __strong typeof(weakSelf) strongSelf = weakSelf;
         if (strongSelf.tableView.mj_footer) {
             
             [strongSelf.tableView.mj_footer resetNoMoreData];
@@ -119,10 +119,10 @@
 
 - (void)addMj_footer {
     
-    RHWeakSelf;
+    __weak typeof(self) weakSelf = self;
     MJRefreshBackNormalFooter * footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
         
-        RHStrongSelf;
+        __strong typeof(weakSelf) strongSelf = weakSelf;
         [strongSelf dropUpGetMore];
     }];
     self.tableView.mj_footer = footer;
