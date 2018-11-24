@@ -6,6 +6,7 @@
 //
 
 #import "RHBViewController.h"
+#import "Masonry.h"
 
 @interface RHBViewController ()
 
@@ -88,9 +89,9 @@
 
 - (void)judgeEmptyDataWithTableView:(UITableView *)tableView {
     
-//    CGFloat headerHeight = tableView.tableHeaderView.frame.size.height;
-//    CGFloat insetTop = tableView.contentInset.top;
-//    CGFloat offsetY = (headerHeight - insetTop)/2;
+    CGFloat headerHeight = tableView.tableHeaderView.frame.size.height;
+    CGFloat insetTop = tableView.contentInset.top;
+    CGFloat offsetY = (headerHeight - insetTop)/2;
     
     NSInteger count = 0;
     for (int i = 0; i < tableView.numberOfSections; i++) {
@@ -103,19 +104,19 @@
     }
     if (count == 0) {
         
-//        [self.emptyView removeFromSuperview];
-//        [tableView addSubview:self.emptyView];
-//        [self.emptyView mas_makeConstraints:^(MASConstraintMaker *make) {
-//
-//            make.width.mas_equalTo(tableView.mas_width);
-//            make.centerX.mas_equalTo(tableView.mas_centerX);
-//            make.height.mas_equalTo(SS(130));
-//            make.centerY.mas_equalTo(tableView.mas_centerY).offset(offsetY);
-//        }];
-//        tableView.scrollEnabled = self.emptyView.scrollEnabled;
+        [self.emptyView removeFromSuperview];
+        [tableView addSubview:self.emptyView];
+        [self.emptyView mas_makeConstraints:^(MASConstraintMaker *make) {
+
+            make.width.mas_equalTo(tableView.mas_width);
+            make.centerX.mas_equalTo(tableView.mas_centerX);
+            make.height.mas_equalTo(200);
+            make.centerY.mas_equalTo(tableView.mas_centerY).offset(offsetY);
+        }];
+        tableView.scrollEnabled = self.emptyView.scrollEnabled;
     } else {
         
-//        [self.emptyView removeFromSuperview];
+        [self.emptyView removeFromSuperview];
         tableView.scrollEnabled = YES;
     }
 }
@@ -134,37 +135,35 @@
     
     if (count == 0) {
         
-//        [self.emptyView removeFromSuperview];
-//        [collection addSubview:self.emptyView];
-//        [self.emptyView mas_makeConstraints:^(MASConstraintMaker *make) {
-//
-//            make.width.mas_equalTo(collection.mas_width);
-//            make.centerX.mas_equalTo(collection.mas_centerX);
-//            make.height.mas_equalTo(SS(130));
-//            make.centerY.mas_equalTo(collection.mas_centerY);
-//        }];
-//        collection.scrollEnabled = self.emptyView.scrollEnabled;
+        [self.emptyView removeFromSuperview];
+        [collection addSubview:self.emptyView];
+        [self.emptyView mas_makeConstraints:^(MASConstraintMaker *make) {
+
+            make.width.mas_equalTo(collection.mas_width);
+            make.centerX.mas_equalTo(collection.mas_centerX);
+            make.height.mas_equalTo(200);
+            make.centerY.mas_equalTo(collection.mas_centerY);
+        }];
+        collection.scrollEnabled = self.emptyView.scrollEnabled;
     } else {
         
-//        [self.emptyView removeFromSuperview];
+        [self.emptyView removeFromSuperview];
         collection.scrollEnabled = YES;
     }
 }
 
 #pragma mark - setter and getter
 
-//- (RHEmptyView *)emptyView {
-//
-//    if (!_emptyView) {
-//
-//        _emptyView = [[RHEmptyView alloc] init];
-//        [_emptyView setImage:[UIImage imageNamed:@"img_empty_none"] title:@"There is no content~"];
-//        _emptyView.textFont = HS15;
-//        _emptyView.textColor = Color_RGB(155, 155, 155);
-//        _emptyView.scrollEnabled = NO;
-//    }
-//    return _emptyView;
-//}
+- (RHEmptyView *)emptyView {
+
+    if (!_emptyView) {
+
+        _emptyView = [[RHEmptyView alloc] init];
+        [_emptyView setImage:[UIImage imageNamed:@"img_empty_none"] title:@"There is no data~"];
+        _emptyView.scrollEnabled = NO;
+    }
+    return _emptyView;
+}
 
 - (CGFloat)navHeight {
     

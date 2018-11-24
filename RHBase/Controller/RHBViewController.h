@@ -7,13 +7,13 @@
 
 #import <UIKit/UIKit.h>
 #import "RHBViewControllerProtocol.h"
-//#import "RHEmptyView.h"
+#import "RHEmptyView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface RHBViewController : UIViewController <RHBViewControllerProtocol>
 
-//@property (nonatomic, strong) RHEmptyView * emptyView;
+@property (nonatomic, strong) RHEmptyView * emptyView;
 
 @property (nonatomic, assign) CGFloat navHeight;
 @property (nonatomic, assign) CGFloat tabBarHeight;

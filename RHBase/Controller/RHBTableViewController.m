@@ -10,7 +10,7 @@
 #import "Masonry.h"
 #import "RHBTableViewCell.h"
 
-@interface RHBTableViewController ()
+@interface RHBTableViewController () <RHEmptyViewDelegate>
 
 @property (nonatomic, strong) NSMutableArray * cellArr;
 @end
@@ -28,6 +28,7 @@
 - (void)addTableView {
     
     [self.view addSubview:self.tableView];
+    self.emptyView.delegate = self;
     [self judgeEmptyDataWithTableView:self.tableView];
     [self makeConstraintsForTableView];
 }
@@ -95,6 +96,10 @@
     [self.tableView.mj_footer endRefreshing];
 }
 
+- (void)emptyDataAction {
+    
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath model:(RHBModel *)model {
     
 }
@@ -126,6 +131,13 @@
         [strongSelf dropUpGetMore];
     }];
     self.tableView.mj_footer = footer;
+}
+
+#pragma mark - empty delegate
+
+- (void)emptyViewDidReloadData {
+    
+    [self emptyDataAction];
 }
 
 #pragma mark - tableView dataSource and delegate

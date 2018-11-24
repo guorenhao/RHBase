@@ -10,7 +10,7 @@
 #import "Masonry.h"
 #import "RHBCollectionViewCell.h"
 
-@interface RHBCollectionViewController ()
+@interface RHBCollectionViewController () <RHEmptyViewDelegate>
 
 @property (nonatomic, strong) NSMutableArray * cellArr;
 
@@ -29,7 +29,8 @@
 - (void)addCollectionView {
     
     [self.view addSubview:self.collection];
-//    [self judgeEmptyDataWithCollectionView:self.collection];
+    [self judgeEmptyDataWithCollectionView:self.collection];
+    self.emptyView.delegate = self;
     [self makeConstraintsForCollectionView];
 }
 
@@ -96,6 +97,10 @@
     [self.collection.mj_footer endRefreshing];
 }
 
+- (void)emptyDataAction {
+    
+}
+
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath model:(RHBModel *)model {
     
 }
@@ -126,6 +131,13 @@
         [strongSelf dropUpGetMore];
     }];
     self.collection.mj_footer = footer;
+}
+
+#pragma mark - empty delegate
+
+- (void)emptyViewDidReloadData {
+    
+    [self emptyDataAction];
 }
 
 #pragma mark - collection dataSource and delegate
