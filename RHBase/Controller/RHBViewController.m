@@ -167,29 +167,16 @@
 
 - (CGFloat)navHeight {
     
-    if ([self iPhoneX]) {
-        
-        return 88;
-    }
-    return 64;
+    return [UIApplication sharedApplication].statusBarFrame.size.height + 44;
 }
 
 - (CGFloat)tabBarHeight {
     
-    if ([self iPhoneX]) {
+    if (@available(iOS 11.0, *)) {
         
-        return 83;
+        return self.view.safeAreaInsets.bottom + 49;
     }
     return 49;
-}
-
-- (BOOL)iPhoneX {
-    
-    if ([UIScreen instancesRespondToSelector:@selector(currentMode)]) {
-        
-        return CGSizeEqualToSize(CGSizeMake(1125, 2436), [[UIScreen mainScreen] currentMode].size);
-    }
-    return NO;
 }
 
 

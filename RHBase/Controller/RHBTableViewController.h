@@ -7,6 +7,7 @@
 
 #import "RHBViewController.h"
 #import "RHBTableViewControllerProtocol.h"
+#import "RHBTableViewCell.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

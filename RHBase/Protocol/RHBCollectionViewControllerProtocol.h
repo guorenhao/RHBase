@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "RHBModel.h"
+#import "RHBUtils.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -14,7 +15,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @optional
 
-- (void)registerCells:(NSArray<NSString *> *)cellArr;
+- (void)updateCollectionConstraint:(RHBConstraintAttribute)attribute value:(CGFloat)value;
+
+- (NSArray <NSString *>*)registerCells;
 
 - (void)reloadData;
 

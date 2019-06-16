@@ -10,7 +10,7 @@
 
 typedef struct RHHorizontalEdge {
     
-    CGFloat left, right;  // specify amount to inset (positive) for the horizontal edges. values can be negative to 'outset'
+    CGFloat left, right;  // specify amount to inset (positive) for the horizontal edges.
 } RHHorizontalEdge;
 
 UIKIT_STATIC_INLINE RHHorizontalEdge RHHorizontalEdgeMake(CGFloat left, CGFloat right) {

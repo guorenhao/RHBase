@@ -8,6 +8,7 @@
 #import <UIKit/UIKit.h>
 #import "RHBViewControllerProtocol.h"
 #import "RHEmptyView.h"
+#import "RHBUtils.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,7 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) RHEmptyView * emptyView;
 
+// 导航与状态栏高度
 @property (nonatomic, assign) CGFloat navHeight;
+// 标签栏高度
 @property (nonatomic, assign) CGFloat tabBarHeight;
 
 @end

@@ -7,10 +7,13 @@
 
 #import "RHBCollectionViewController.h"
 #import <MJRefresh/MJRefresh.h>
-#import "Masonry.h"
-#import "RHBCollectionViewCell.h"
 
 @interface RHBCollectionViewController () <RHEmptyViewDelegate>
+
+@property (nonatomic) NSLayoutConstraint *collectionTopConstraint;
+@property (nonatomic) NSLayoutConstraint *collectionLeftConstraint;
+@property (nonatomic) NSLayoutConstraint *collectionBottomConstraint;
+@property (nonatomic) NSLayoutConstraint *collectionRightConstraint;
 
 @property (nonatomic, strong) NSMutableArray * cellArr;
 
@@ -29,8 +32,8 @@
 - (void)addCollectionView {
     
     [self.view addSubview:self.collection];
-    [self judgeEmptyDataWithCollectionView:self.collection];
     self.emptyView.delegate = self;
+//    [self judgeEmptyDataWithCollectionView:self.collection];
     [self makeConstraintsForCollectionView];
 }
 
@@ -38,41 +41,61 @@
 
 - (void)makeConstraintsForCollectionView {
     
-    [self.collection mas_makeConstraints:^(MASConstraintMaker *make) {
-        
-        make.left.mas_equalTo(0);
-        make.top.mas_equalTo(0);
-        make.bottom.mas_offset(0);
-        make.right.mas_offset(0);
-    }];
+    self.collectionTopConstraint = [NSLayoutConstraint constraintWithItem:self.collection attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0 constant:0];
+    self.collectionLeftConstraint = [NSLayoutConstraint constraintWithItem:self.collection attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0];
+    self.collectionBottomConstraint = [NSLayoutConstraint constraintWithItem:self.collection attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0];
+    self.collectionRightConstraint = [NSLayoutConstraint constraintWithItem:self.collection attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeRight multiplier:1.0 constant:0];
+    [self.view addConstraint:self.collectionTopConstraint];
+    [self.view addConstraint:self.collectionLeftConstraint];
+    [self.view addConstraint:self.collectionBottomConstraint];
+    [self.view addConstraint:self.collectionRightConstraint];
     [self addMj_header];
     [self addMj_footer];
 }
 
 #pragma mark - protocol
 
-- (void)registerCells:(NSArray<NSString *> *)cellArr {
+- (void)updateCollectionConstraint:(RHBConstraintAttribute)attribute value:(CGFloat)value {
     
-    [self.cellArr removeAllObjects];
-    for (NSString * clsStr in cellArr) {
-        
-        [self.cellArr addObject:clsStr];
-        [self.collection registerClass:NSClassFromString(clsStr) forCellWithReuseIdentifier:clsStr];
+    switch (attribute) {
+        case RHBConstraintAttributeTop:
+        {
+            [self.view removeConstraint:self.collectionTopConstraint];
+            self.collectionTopConstraint = [NSLayoutConstraint constraintWithItem:self.collection attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0 constant:value];
+            [self.view addConstraint:self.collectionTopConstraint];
+        }
+            break;
+        case RHBConstraintAttributeLeft:
+        {
+            [self.view removeConstraint:self.collectionLeftConstraint];
+            self.collectionLeftConstraint = [NSLayoutConstraint constraintWithItem:self.collection attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1.0 constant:value];
+            [self.view addConstraint:self.collectionLeftConstraint];
+        }
+            break;
+        case RHBConstraintAttributeBottom:
+        {
+            [self.view removeConstraint:self.collectionBottomConstraint];
+            self.collectionBottomConstraint = [NSLayoutConstraint constraintWithItem:self.collection attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:value];
+            [self.view addConstraint:self.collectionBottomConstraint];
+        }
+            break;
+        case RHBConstraintAttributeRight:
+        {
+            [self.view removeConstraint:self.collectionRightConstraint];
+            self.collectionRightConstraint = [NSLayoutConstraint constraintWithItem:self.collection attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeRight multiplier:1.0 constant:value];
+            [self.view addConstraint:self.collectionRightConstraint];
+        }
+            break;
+        default:
+            break;
     }
+    [self.view layoutIfNeeded];
 }
 
 - (void)reloadData {
     
     [self.collection reloadData];
     [self judgeEmptyDataWithCollectionView:self.collection];
-}
-
-- (void)dropDownRefresh {
-    
-}
-
-- (void)dropUpGetMore {
-    
 }
 
 - (void)removeRefreshHeader {
@@ -99,10 +122,10 @@
 
 - (void)emptyDataAction {
     
-}
-
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath model:(RHBModel *)model {
-    
+    if ([self respondsToSelector:@selector(dropDownRefresh)]) {
+        
+        [self dropDownRefresh];
+    }
 }
 
 #pragma mark - refresh
@@ -117,7 +140,13 @@
             
             [strongSelf.collection.mj_footer resetNoMoreData];
         }
-        [strongSelf dropDownRefresh];
+        if ([strongSelf respondsToSelector:@selector(dropDownRefresh)]) {
+            
+            [strongSelf dropDownRefresh];
+        } else {
+            
+            [strongSelf.collection.mj_header endRefreshing];
+        }
     }];
     self.collection.mj_header = header;
 }
@@ -128,7 +157,13 @@
     MJRefreshBackNormalFooter * footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
         
         __strong typeof(weakSelf) strongSelf = weakSelf;
-        [strongSelf dropUpGetMore];
+        if ([strongSelf respondsToSelector:@selector(dropUpGetMore)]) {
+            
+            [strongSelf dropUpGetMore];
+        } else {
+            
+            [strongSelf.collection.mj_footer endRefreshing];
+        }
     }];
     self.collection.mj_footer = footer;
 }
@@ -165,8 +200,12 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    RHBModel * model = [self.dataArr objectAtIndex:indexPath.row];
-    return model.itemSize;
+    if (indexPath.row < self.dataArr.count) {
+        
+        RHBModel * model = [self.dataArr objectAtIndex:indexPath.row];
+        return model.itemSize;
+    }
+    return CGSizeZero;
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
@@ -186,8 +225,14 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    RHBModel * model = [self.dataArr objectAtIndex:indexPath.row];
-    [self collectionView:collectionView didSelectItemAtIndexPath:indexPath model:model];
+    if ([self respondsToSelector:@selector(collectionView:didSelectItemAtIndexPath:model:)]) {
+        
+        if (indexPath.row < self.dataArr.count) {
+            
+            RHBModel * model = [self.dataArr objectAtIndex:indexPath.row];
+            [self collectionView:collectionView didSelectItemAtIndexPath:indexPath model:model];
+        }
+    }
 }
 
 #pragma mark - setter and getter
@@ -202,7 +247,17 @@
         collection.backgroundColor = [UIColor whiteColor];
         collection.delegate = self;
         collection.dataSource = self;
-        [collection registerClass:RHBCollectionViewCell.class forCellWithReuseIdentifier:NSStringFromClass(RHBCollectionViewCell.class)];
+        collection.translatesAutoresizingMaskIntoConstraints = NO;
+        if (self.cellArr.count > 0) {
+            
+            for (NSString * cls in self.cellArr) {
+                
+                [collection registerClass:NSClassFromString(cls) forCellWithReuseIdentifier:cls];
+            }
+        } else {
+            
+            [collection registerClass:RHBCollectionViewCell.class forCellWithReuseIdentifier:NSStringFromClass(RHBCollectionViewCell.class)];
+        }
         _collection = collection;
     }
     return _collection;
@@ -222,6 +277,10 @@
     if (!_cellArr) {
         
         _cellArr = [NSMutableArray new];
+        if ([self respondsToSelector:@selector(registerCells)]) {
+            
+            [_cellArr addObjectsFromArray:[self registerCells]];
+        }
     }
     return _cellArr;
 }

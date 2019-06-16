@@ -7,6 +7,7 @@
 
 #import "RHBViewController.h"
 #import "RHBCollectionViewControllerProtocol.h"
+#import "RHBCollectionViewCell.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

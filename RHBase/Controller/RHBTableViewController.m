@@ -7,10 +7,13 @@
 
 #import "RHBTableViewController.h"
 #import <MJRefresh/MJRefresh.h>
-#import "Masonry.h"
-#import "RHBTableViewCell.h"
 
 @interface RHBTableViewController () <RHEmptyViewDelegate>
+
+@property (nonatomic) NSLayoutConstraint *tableTopConstraint;
+@property (nonatomic) NSLayoutConstraint *tableLeftConstraint;
+@property (nonatomic) NSLayoutConstraint *tableBottomConstraint;
+@property (nonatomic) NSLayoutConstraint *tableRightConstraint;
 
 @property (nonatomic, strong) NSMutableArray * cellArr;
 @end
@@ -29,7 +32,7 @@
     
     [self.view addSubview:self.tableView];
     self.emptyView.delegate = self;
-    [self judgeEmptyDataWithTableView:self.tableView];
+//    [self judgeEmptyDataWithTableView:self.tableView];
     [self makeConstraintsForTableView];
 }
 
@@ -37,41 +40,61 @@
 
 - (void)makeConstraintsForTableView {
     
-    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        
-        make.left.mas_equalTo(0);
-        make.top.mas_equalTo(0);
-        make.bottom.mas_offset(0);
-        make.right.mas_offset(0);
-    }];
+    self.tableTopConstraint = [NSLayoutConstraint constraintWithItem:self.tableView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0 constant:0];
+    self.tableLeftConstraint = [NSLayoutConstraint constraintWithItem:self.tableView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0];
+    self.tableBottomConstraint = [NSLayoutConstraint constraintWithItem:self.tableView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0];
+    self.tableRightConstraint = [NSLayoutConstraint constraintWithItem:self.tableView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeRight multiplier:1.0 constant:0];
+    [self.view addConstraint:self.tableTopConstraint];
+    [self.view addConstraint:self.tableLeftConstraint];
+    [self.view addConstraint:self.tableBottomConstraint];
+    [self.view addConstraint:self.tableRightConstraint];
     [self addMj_header];
     [self addMj_footer];
 }
 
 #pragma mark - protocol
 
-- (void)registerCells:(NSArray<NSString *> *)cellArr {
+- (void)updateTableConstraint:(RHBConstraintAttribute)attribute value:(CGFloat)value {
     
-    [self.cellArr removeAllObjects];
-    for (NSString * clsStr in cellArr) {
-        
-        [self.cellArr addObject:clsStr];
-        [self.tableView registerClass:NSClassFromString(clsStr) forCellReuseIdentifier:clsStr];
+    switch (attribute) {
+        case RHBConstraintAttributeTop:
+        {
+            [self.view removeConstraint:self.tableTopConstraint];
+            self.tableTopConstraint = [NSLayoutConstraint constraintWithItem:self.tableView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0 constant:value];
+            [self.view addConstraint:self.tableTopConstraint];
+        }
+            break;
+        case RHBConstraintAttributeLeft:
+        {
+            [self.view removeConstraint:self.tableLeftConstraint];
+            self.tableLeftConstraint = [NSLayoutConstraint constraintWithItem:self.tableView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1.0 constant:value];
+            [self.view addConstraint:self.tableLeftConstraint];
+        }
+            break;
+        case RHBConstraintAttributeBottom:
+        {
+            [self.view removeConstraint:self.tableBottomConstraint];
+            self.tableBottomConstraint = [NSLayoutConstraint constraintWithItem:self.tableView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:value];
+            [self.view addConstraint:self.tableBottomConstraint];
+        }
+            break;
+        case RHBConstraintAttributeRight:
+        {
+            [self.view removeConstraint:self.tableRightConstraint];
+            self.tableRightConstraint = [NSLayoutConstraint constraintWithItem:self.tableView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeRight multiplier:1.0 constant:value];
+            [self.view addConstraint:self.tableRightConstraint];
+        }
+            break;
+        default:
+            break;
     }
+    [self.view layoutIfNeeded];
 }
 
 - (void)reloadData {
     
     [self.tableView reloadData];
     [self judgeEmptyDataWithTableView:self.tableView];
-}
-
-- (void)dropDownRefresh {
-    
-}
-
-- (void)dropUpGetMore {
-    
 }
 
 - (void)removeRefreshHeader {
@@ -98,10 +121,7 @@
 
 - (void)emptyDataAction {
     
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath model:(RHBModel *)model {
-    
+    [self dropDownRefresh];
 }
 
 
@@ -117,7 +137,13 @@
             
             [strongSelf.tableView.mj_footer resetNoMoreData];
         }
-        [strongSelf dropDownRefresh];
+        if ([strongSelf respondsToSelector:@selector(dropDownRefresh)]) {
+            
+            [strongSelf dropDownRefresh];
+        } else {
+            
+            [strongSelf.tableView.mj_header endRefreshing];
+        }
     }];
     self.tableView.mj_header = header;
 }
@@ -128,7 +154,13 @@
     MJRefreshBackNormalFooter * footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
         
         __strong typeof(weakSelf) strongSelf = weakSelf;
-        [strongSelf dropUpGetMore];
+        if ([strongSelf respondsToSelector:@selector(dropUpGetMore)]) {
+            
+            [strongSelf dropUpGetMore];
+        } else {
+            
+            [strongSelf.tableView.mj_footer endRefreshing];
+        }
     }];
     self.tableView.mj_footer = footer;
 }
@@ -165,15 +197,25 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    RHBModel * model = [self.dataArr objectAtIndex:indexPath.row];
-    return model.cellHeight;
+    if (indexPath.row < self.dataArr.count) {
+        
+        RHBModel * model = [self.dataArr objectAtIndex:indexPath.row];
+        return model.cellHeight;
+    }
+    return 0;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    RHBModel * model = [self.dataArr objectAtIndex:indexPath.row];
-    [self tableView:tableView didSelectRowAtIndexPath:indexPath model:model];
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if ([self respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:model:)]) {
+        
+        if (indexPath.row < self.dataArr.count) {
+            
+            RHBModel * model = [self.dataArr objectAtIndex:indexPath.row];
+            [self tableView:tableView didSelectRowAtIndexPath:indexPath model:model];
+        }
+    }
 }
 
 #pragma mark - setter and getter
@@ -186,11 +228,21 @@
         table.dataSource = self;
         table.delegate = self;
         table.backgroundColor = [UIColor whiteColor];
+        table.translatesAutoresizingMaskIntoConstraints = NO;
         table.estimatedRowHeight = 0;
         table.estimatedSectionHeaderHeight = 0;
         table.estimatedSectionFooterHeight = 0;
         table.tableFooterView = [[UIView alloc] init];
-        [table registerClass:[RHBTableViewCell class] forCellReuseIdentifier:NSStringFromClass(RHBTableViewCell.class)];
+        if (self.cellArr.count > 0) {
+            
+            for (NSString * cls in self.cellArr) {
+                
+                [table registerClass:NSClassFromString(cls) forCellReuseIdentifier:cls];
+            }
+        } else {
+            
+            [table registerClass:[RHBTableViewCell class] forCellReuseIdentifier:NSStringFromClass(RHBTableViewCell.class)];
+        }
         if (@available(iOS 11.0, *)) {
             
             table.contentInsetAdjustmentBehavior = UIApplicationBackgroundFetchIntervalNever;
@@ -215,6 +267,10 @@
     if (!_cellArr) {
         
         _cellArr = [NSMutableArray new];
+        if ([self respondsToSelector:@selector(registerCells)]) {
+            
+            [_cellArr addObjectsFromArray:[self registerCells]];
+        }
     }
     return _cellArr;
 }
