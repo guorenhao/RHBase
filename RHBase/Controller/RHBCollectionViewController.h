@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) CGFloat minInteritemSpacing;
 @property (nonatomic, assign) UIEdgeInsets sectionInset;
 
+- (instancetype)initWithScrollDirection:(UICollectionViewScrollDirection)scrollDirection;
+
 @end
 
 NS_ASSUME_NONNULL_END

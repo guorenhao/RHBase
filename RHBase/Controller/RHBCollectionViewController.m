@@ -16,10 +16,25 @@
 @property (nonatomic) NSLayoutConstraint *collectionRightConstraint;
 
 @property (nonatomic, strong) NSMutableArray * cellArr;
-
+@property (nonatomic, assign) UICollectionViewScrollDirection scrollDirection;
 @end
 
 @implementation RHBCollectionViewController
+
+- (instancetype)initWithScrollDirection:(UICollectionViewScrollDirection)scrollDirection {
+    
+    self = [super init];
+    if (self) {
+        
+        self.scrollDirection = scrollDirection;
+    }
+    return self;
+}
+
+- (instancetype)init {
+    
+    return [[[self class] alloc] initWithScrollDirection:UICollectionViewScrollDirectionVertical];
+}
 
 - (void)viewDidLoad {
     [self addCollectionView];
@@ -193,7 +208,7 @@
     if (indexPath.row < self.dataArr.count) {
         
         RHBModel * model = [self.dataArr objectAtIndex:indexPath.row];
-        [cell configCellWithModel:model indexPath:indexPath];
+        [cell configWithModel:model indexPath:indexPath];
     }
     return cell;
 }
@@ -242,7 +257,7 @@
     if (!_collection) {
         
         UICollectionViewFlowLayout * layout = [[UICollectionViewFlowLayout alloc] init];
-        layout.scrollDirection = UICollectionViewScrollDirectionVertical;
+        layout.scrollDirection = self.scrollDirection;
         UICollectionView * collection = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
         collection.backgroundColor = [UIColor whiteColor];
         collection.delegate = self;

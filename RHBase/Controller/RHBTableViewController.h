@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UITableView * tableView;
 @property (nonatomic, strong) NSMutableArray * dataArr;
 
+- (instancetype)initWithStyle:(UITableViewStyle)style;
 
 @end
 

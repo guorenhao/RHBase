@@ -16,9 +16,25 @@
 @property (nonatomic) NSLayoutConstraint *tableRightConstraint;
 
 @property (nonatomic, strong) NSMutableArray * cellArr;
+@property (nonatomic, assign) UITableViewStyle style;
 @end
 
 @implementation RHBTableViewController
+
+- (instancetype)initWithStyle:(UITableViewStyle)style {
+    
+    self = [super init];
+    if (self) {
+        
+        self.style = style;
+    }
+    return self;
+}
+
+- (instancetype)init {
+    
+    return [[[self class] alloc] initWithStyle:UITableViewStylePlain];
+}
 
 - (void)viewDidLoad {
     [self addTableView];
@@ -190,7 +206,7 @@
     if (indexPath.row < self.dataArr.count) {
         
         RHBModel * model = [self.dataArr objectAtIndex:indexPath.row];
-        [cell configCellWithModel:model indexPath:indexPath];
+        [cell configWithModel:model indexPath:indexPath];
     }
     return cell;
 }
@@ -224,7 +240,7 @@
     
     if (!_tableView) {
         
-        UITableView * table = [[UITableView alloc] init];
+        UITableView * table = [[UITableView alloc] initWithFrame:CGRectZero style:self.style];
         table.dataSource = self;
         table.delegate = self;
         table.backgroundColor = [UIColor whiteColor];

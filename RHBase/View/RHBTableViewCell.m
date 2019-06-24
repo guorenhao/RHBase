@@ -38,7 +38,7 @@
     
 }
 
-- (void)configCellWithModel:(RHBModel *)model indexPath:(NSIndexPath *)indexPath {
+- (void)configWithModel:(RHBModel *)model indexPath:(NSIndexPath *)indexPath {
     
 }
 
