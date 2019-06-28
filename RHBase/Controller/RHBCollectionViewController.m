@@ -48,7 +48,6 @@
     
     [self.view addSubview:self.collection];
     self.emptyView.delegate = self;
-//    [self judgeEmptyDataWithCollectionView:self.collection];
     [self makeConstraintsForCollectionView];
 }
 
@@ -56,7 +55,13 @@
 
 - (void)makeConstraintsForCollectionView {
     
-    self.collectionTopConstraint = [NSLayoutConstraint constraintWithItem:self.collection attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0 constant:0];
+    if (self.navigationController && self.navigationController.navigationBar.translucent) {
+        
+        self.collectionTopConstraint = [NSLayoutConstraint constraintWithItem:self.collection attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0 constant:self.navHeight];
+    } else {
+        
+        self.collectionTopConstraint = [NSLayoutConstraint constraintWithItem:self.collection attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0 constant:0];
+    }
     self.collectionLeftConstraint = [NSLayoutConstraint constraintWithItem:self.collection attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0];
     self.collectionBottomConstraint = [NSLayoutConstraint constraintWithItem:self.collection attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0];
     self.collectionRightConstraint = [NSLayoutConstraint constraintWithItem:self.collection attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeRight multiplier:1.0 constant:0];
@@ -272,6 +277,11 @@
         } else {
             
             [collection registerClass:RHBCollectionViewCell.class forCellWithReuseIdentifier:NSStringFromClass(RHBCollectionViewCell.class)];
+        }
+        if (@available(iOS 11.0, *)) {
+            
+            collection.contentInsetAdjustmentBehavior = UIApplicationBackgroundFetchIntervalNever;
+            collection.scrollIndicatorInsets = collection.contentInset;
         }
         _collection = collection;
     }
