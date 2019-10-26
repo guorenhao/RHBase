@@ -33,7 +33,12 @@
 
 - (instancetype)init {
     
-    return [[[self class] alloc] initWithScrollDirection:UICollectionViewScrollDirectionVertical];
+    self = [super init];
+    if (self) {
+        
+        self.scrollDirection = UICollectionViewScrollDirectionVertical;
+    }
+    return self;
 }
 
 - (void)viewDidLoad {

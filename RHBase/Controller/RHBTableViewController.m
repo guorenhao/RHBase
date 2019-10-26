@@ -33,7 +33,12 @@
 
 - (instancetype)init {
     
-    return [[[self class] alloc] initWithStyle:UITableViewStylePlain];
+    self = [super init];
+    if (self) {
+        
+        self.style = UITableViewStylePlain;
+    }
+    return self;
 }
 
 - (void)viewDidLoad {
