@@ -35,7 +35,7 @@
 
 - (void)addSubviews {
     
-    self.backgroundColor = [UIColor whiteColor];
+    self.backgroundColor = [UIColor clearColor];
     [self addSubview:self.img_icon];
     [self addSubview:self.lab_title];
     [self addSubview:self.btn_reload];

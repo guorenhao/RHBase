@@ -80,31 +80,31 @@
 
 #pragma mark - protocol
 
-- (void)updateTableConstraint:(RHBConstraintAttribute)attribute value:(CGFloat)value {
+- (void)updateTableConstraint:(RHConstraintAttribute)attribute value:(CGFloat)value {
     
     switch (attribute) {
-        case RHBConstraintAttributeTop:
+        case RHConstraintAttributeTop:
         {
             [self.view removeConstraint:self.tableTopConstraint];
             self.tableTopConstraint = [NSLayoutConstraint constraintWithItem:self.tableView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0 constant:value];
             [self.view addConstraint:self.tableTopConstraint];
         }
             break;
-        case RHBConstraintAttributeLeft:
+        case RHConstraintAttributeLeft:
         {
             [self.view removeConstraint:self.tableLeftConstraint];
             self.tableLeftConstraint = [NSLayoutConstraint constraintWithItem:self.tableView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1.0 constant:value];
             [self.view addConstraint:self.tableLeftConstraint];
         }
             break;
-        case RHBConstraintAttributeBottom:
+        case RHConstraintAttributeBottom:
         {
             [self.view removeConstraint:self.tableBottomConstraint];
             self.tableBottomConstraint = [NSLayoutConstraint constraintWithItem:self.tableView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:value];
             [self.view addConstraint:self.tableBottomConstraint];
         }
             break;
-        case RHBConstraintAttributeRight:
+        case RHConstraintAttributeRight:
         {
             [self.view removeConstraint:self.tableRightConstraint];
             self.tableRightConstraint = [NSLayoutConstraint constraintWithItem:self.tableView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeRight multiplier:1.0 constant:value];

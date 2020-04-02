@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @optional
 
-- (void)updateTableConstraint:(RHBConstraintAttribute)attribute value:(CGFloat)value;
+- (void)updateTableConstraint:(RHConstraintAttribute)attribute value:(CGFloat)value;
 
 - (NSArray <NSString *>*)registerCells;
 

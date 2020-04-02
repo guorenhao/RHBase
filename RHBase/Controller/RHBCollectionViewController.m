@@ -80,31 +80,31 @@
 
 #pragma mark - protocol
 
-- (void)updateCollectionConstraint:(RHBConstraintAttribute)attribute value:(CGFloat)value {
+- (void)updateCollectionConstraint:(RHConstraintAttribute)attribute value:(CGFloat)value {
     
     switch (attribute) {
-        case RHBConstraintAttributeTop:
+        case RHConstraintAttributeTop:
         {
             [self.view removeConstraint:self.collectionTopConstraint];
             self.collectionTopConstraint = [NSLayoutConstraint constraintWithItem:self.collection attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0 constant:value];
             [self.view addConstraint:self.collectionTopConstraint];
         }
             break;
-        case RHBConstraintAttributeLeft:
+        case RHConstraintAttributeLeft:
         {
             [self.view removeConstraint:self.collectionLeftConstraint];
             self.collectionLeftConstraint = [NSLayoutConstraint constraintWithItem:self.collection attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1.0 constant:value];
             [self.view addConstraint:self.collectionLeftConstraint];
         }
             break;
-        case RHBConstraintAttributeBottom:
+        case RHConstraintAttributeBottom:
         {
             [self.view removeConstraint:self.collectionBottomConstraint];
             self.collectionBottomConstraint = [NSLayoutConstraint constraintWithItem:self.collection attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:value];
             [self.view addConstraint:self.collectionBottomConstraint];
         }
             break;
-        case RHBConstraintAttributeRight:
+        case RHConstraintAttributeRight:
         {
             [self.view removeConstraint:self.collectionRightConstraint];
             self.collectionRightConstraint = [NSLayoutConstraint constraintWithItem:self.collection attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeRight multiplier:1.0 constant:value];
